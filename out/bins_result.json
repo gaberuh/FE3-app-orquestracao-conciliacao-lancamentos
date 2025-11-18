@@ -1,0 +1,47 @@
+{
+  "bins": [
+    {
+      "id": "019a992b-29da-70ae-92bd-d0e1d8c877bd",
+      "total": 900000,
+      "items": [
+        {
+          "empresa": "004/341",
+          "conta_contabil": 4997796000000,
+          "qtd": 500000
+        },
+        {
+          "empresa": "004/341",
+          "conta_contabil": 4997796000000,
+          "qtd": 400000
+        }
+      ],
+      "oversized": false
+    }
+  ],
+  "oversized": [
+    {
+      "id": "019a992b-29d8-7311-b20e-aee7a91b33b7",
+      "total": 1500000,
+      "items": [
+        {
+          "empresa": "004/341",
+          "conta_contabil": 4335002000000,
+          "qtd": 1500000
+        }
+      ],
+      "oversized": true
+    },
+    {
+      "id": "019a992b-29d9-78a0-9fcc-b300162dfd6e",
+      "total": 1200000,
+      "items": [
+        {
+          "empresa": "004/526",
+          "conta_contabil": 4335002000000,
+          "qtd": 1200000
+        }
+      ],
+      "oversized": true
+    }
+  ]
+}
