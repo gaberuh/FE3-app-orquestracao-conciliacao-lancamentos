@@ -1,24 +1,37 @@
-from app.core.config import settings, logger
-from app.core.db import fetch_groups_from_csv
-from app.services.packer import pack_groups
-from app.utils.utils import save_json
+import os
+import json
+from app.core.config import logger, settings
+from app.services.fetcher_service import fetch_groups_from_csv
+from app.services.packer_service import BinPacker
+from app.services.serializer_service import Serializer
 
 
 def main():
     logger.info("Iniciando processamento de conciliação...")
 
-    logger.info(f"Lendo arquivo de entrada: {settings.INPUT_FILE}")
+    # Carrega os grupos do CSV
     items = fetch_groups_from_csv(settings.INPUT_FILE)
-
     logger.info(f"Total de grupos carregados: {len(items)}")
-    logger.info(f"Iniciando bin packing com limite: {settings.CAPACITY_LIMIT}")
 
-    result = pack_groups(items, settings.CAPACITY_LIMIT)
+    # Prepara o bin packer com o limite definido nas configs
+    packer = BinPacker(capacity_limit=settings.CAPACITY_LIMIT)
+    bins = packer.pack(items)
+    logger.info(f"Total de bins gerados: {len(bins)}")
 
-    save_json("out/bins_result.json", result)
+    # Serializa os bins para formato pronto para Spark
+    serializer = Serializer(bins)
+    spark_ready = serializer.to_spark_json()
 
-    logger.info("Processo concluído com sucesso!")
-    logger.info("Arquivo gerado em out/bins_result.json")
+    # Cria pasta de saída se não existir
+    output_dir = "out"
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, "bins_spark.json")
+
+    # Salva JSON final
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(spark_ready, f, indent=2, ensure_ascii=False)
+
+    logger.info(f"JSON gerado em: {output_path}")
 
 
 if __name__ == "__main__":

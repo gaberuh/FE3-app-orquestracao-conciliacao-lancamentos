@@ -1,4 +1,4 @@
-from app.services.packer import pack_groups
+from app.services.packer_service import pack_groups
 
 def test_basic_pack():
     items = [

@@ -1,6 +1,6 @@
 import json
 from typing import List
-from .config import get_sqs_client, settings
+from app.core.config import get_sqs_client, settings
 
 def send_batches_to_sqs(batches: List[dict]):
     sqs = get_sqs_client()

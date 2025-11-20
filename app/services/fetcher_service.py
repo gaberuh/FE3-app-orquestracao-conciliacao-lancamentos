@@ -1,14 +1,26 @@
 import pandas as pd
+from app.core.config import logger
 
 def fetch_groups_from_csv(path: str):
-    """
-    Carrega dados no formato:
-    empresa,conta_contabil,qtd
-    """
-    df = pd.read_csv(path)
+    logger.info(f"Lendo CSV agrupado: {path}")
+
+    df = pd.read_csv(path, dtype=str)
+
+    # Convertendo qtd para int
     df["qtd"] = df["qtd"].astype(int)
 
-    return df.to_dict(orient="records")
+    # Agrupamento completo por todas as chaves
+    grouped = (
+        df.groupby(["empresa", "conta_contabil", "tabela_origem", "particao"], as_index=False)
+          .agg({"qtd": "sum"})
+    )
+
+    results = grouped.to_dict(orient="records")
+
+    logger.info(f"Total de grupos consolidados: {len(results)}")
+
+    return results
+
 
 
 # ================================
